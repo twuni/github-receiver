@@ -1,16 +1,22 @@
+DEFAULT_PORT = 4567
+
 namespace :development do
   desc "Start the server in development mode."
-  task :server do
+  task :server, :port do |t, args|
+    port = args[:port] || DEFAULT_PORT
     ENV["RACK_ENV"] = "development"
-    sh "rackup -p 4567"
+    puts "Starting the server in DEVELOPMENT mode..."
+    sh "rackup -p #{port}"
   end
 end
 
 namespace :production do
   desc "Start the server in production mode."
-  task :server do
+  task :server, :port do |t, args|
+    port = args[:port] || DEFAULT_PORT
     ENV["RACK_ENV"] = "production"
-    sh "rackup -p 4567"
+    puts "Starting the server in PRODUCTION mode..."
+    sh "rackup -p #{port}"
   end
 end
 
@@ -19,7 +25,7 @@ task :install do
   sh "bundle install"
 end
 
-desc "Start the server on port 4567."
-task :server => [ "development:server" ]
+desc "Alias for development:server task."
+task :server, [ :port ] => [ "development:server" ]
 
-task :default => [ "install", "server" ]
+task :default, [ :port ] => [ "install", "server" ]
